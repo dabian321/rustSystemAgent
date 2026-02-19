@@ -41,7 +41,7 @@ impl Agent {
         let system_prompt = format!(
             "You are a helpful system agent running on {system_info}. \
              You have access to tools for executing shell commands, reading/writing files, \
-             listing directories, and managing a persistent memory store.\n\n\
+             listing directories, managing a persistent memory store, web search (DuckDuckGo), and fetching web page content by URL.\n\n\
              Persistent Memory:\n{persistent_memory}\n\n\
              Rules:\n\
              - Use the terminal tool to execute commands compatible with the current OS.\n\

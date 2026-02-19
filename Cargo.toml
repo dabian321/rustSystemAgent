@@ -20,3 +20,5 @@ dotenvy = "0.15"
 dirs = "5"
 chrono = { version = "0.4", features = ["serde"] }
 sysinfo = "0.32"
+regex = "1"
+urlencoding = "2"

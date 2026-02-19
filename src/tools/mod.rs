@@ -1,6 +1,8 @@
 pub mod file;
 pub mod memory;
 pub mod shell;
+pub mod web_fetch;
+pub mod web_search;
 
 use crate::llm::{FunctionDefinition, ToolDefinition};
 use memory::MemoryManager;
@@ -161,6 +163,40 @@ pub fn tool_definitions() -> Vec<ToolDefinition> {
                 }),
             },
         },
+        ToolDefinition {
+            tool_type: "function".into(),
+            function: FunctionDefinition {
+                name: "web_search".into(),
+                description: "Search the web for information. Use when you need up-to-date info, docs, news, or anything you are unsure about. Input should be a search query or question (English often gives better results). Returns titles, snippets, and URLs.".into(),
+                parameters: json!({
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "Search keywords or question"
+                        }
+                    },
+                    "required": ["query"]
+                }),
+            },
+        },
+        ToolDefinition {
+            tool_type: "function".into(),
+            function: FunctionDefinition {
+                name: "web_fetch".into(),
+                description: "Fetch and read the content of a web page URL. Use when the user provides a URL or when you need to get details from a specific page. Input should be a full URL (e.g. https://example.com/page). Returns the page title and main text.".into(),
+                parameters: json!({
+                    "type": "object",
+                    "properties": {
+                        "url": {
+                            "type": "string",
+                            "description": "Full URL of the page to fetch"
+                        }
+                    },
+                    "required": ["url"]
+                }),
+            },
+        },
     ]
 }
 
@@ -209,6 +245,14 @@ pub async fn dispatch_tool(
         "delete_memory_type" => {
             let mt = args["memory_type"].as_str().unwrap_or(arguments);
             memory.delete_by_type(mt)
+        }
+        "web_search" => {
+            let query = args["query"].as_str().unwrap_or(arguments);
+            web_search::web_search(query).await
+        }
+        "web_fetch" => {
+            let url = args["url"].as_str().unwrap_or(arguments);
+            web_fetch::web_fetch(url).await
         }
         _ => format!("Unknown tool: {name}"),
     }
