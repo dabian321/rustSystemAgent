@@ -111,21 +111,31 @@ if [[ "$INSTALL_DIR" == "$HOME/.local/bin" ]]; then
   fi
 fi
 
-# ---------- 4. 配置文件 ----------
+# ---------- 4. 配置文件（两处任选其一，程序按顺序查找）----------
+# 4.1 项目目录 .env
 ENV_FILE="$SCRIPT_DIR/.env"
 if [[ ! -f "$ENV_FILE" ]]; then
   if [[ -f "$SCRIPT_DIR/.env.example" ]]; then
     cp "$SCRIPT_DIR/.env.example" "$ENV_FILE"
-    info "已从 .env.example 创建 .env，请编辑并填入 API Key。"
-  else
-    info "请在该项目根目录创建 .env 并配置 API Key，例如："
-    echo ""
-    echo "  OPENROUTER_API_KEY=sk-or-v1-your-key"
-    echo "  MODEL_NAME=google/gemini-2.5-flash"
-    echo ""
+    info "已在项目目录创建 .env，请编辑并填入 API Key。"
+  fi
+fi
+# 4.2 全局配置（任意目录运行 rsa 都会读这里）
+CONFIG_DIR="$HOME/.config/rust-system-agent"
+GLOBAL_ENV="$CONFIG_DIR/.env"
+mkdir -p "$CONFIG_DIR"
+if [[ ! -f "$GLOBAL_ENV" ]]; then
+  if [[ -f "$SCRIPT_DIR/.env.example" ]]; then
+    cp "$SCRIPT_DIR/.env.example" "$GLOBAL_ENV"
+    ok "已创建全局配置: $GLOBAL_ENV（在别的机器/任意目录运行 rsa 时请编辑此处填入 API Key）"
   fi
 else
-  ok "已存在 .env 配置"
+  ok "已存在全局配置 $GLOBAL_ENV"
+fi
+if [[ ! -f "$ENV_FILE" ]] && [[ ! -f "$GLOBAL_ENV" ]]; then
+  info "请编辑以下任一文件并填入 API Key："
+  echo "  项目: $ENV_FILE"
+  echo "  全局: $GLOBAL_ENV"
 fi
 
 # ---------- 5. 可选：交互模式别名 ----------

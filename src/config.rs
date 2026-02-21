@@ -12,16 +12,16 @@ pub struct Config {
 
 impl Config {
     pub fn from_env() -> Result<Self, String> {
-        // Try loading .env from the project root (next to the binary or workspace)
+        // Try loading .env: 当前目录 → 可执行文件所在目录 → ~/.config/rust-system-agent/.env
         let exe_dir = std::env::current_exe()
             .ok()
             .and_then(|p| p.parent().map(|d| d.to_path_buf()));
+        let home_env = dirs::config_dir().map(|d| d.join("rust-system-agent").join(".env"));
 
-        // Try multiple .env locations
         let env_paths = [
-            Some(PathBuf::from("/home/yzb/lanchainAgent/.env")),
-            exe_dir.map(|d| d.join(".env")),
             Some(PathBuf::from(".env")),
+            exe_dir.map(|d| d.join(".env")),
+            home_env,
         ];
 
         for path in env_paths.iter().flatten() {
