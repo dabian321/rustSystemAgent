@@ -142,7 +142,7 @@ fi
 add_alias() {
   local rc_file="$1"
   local line="alias rsai='rsa interactive'"
-  if [[ -f "$rc_file" ]] && ! grep -q "alias rasi=" "$rc_file" 2>/dev/null; then
+  if [[ -f "$rc_file" ]] && ! grep -q "alias rsai=" "$rc_file" 2>/dev/null; then
     echo "" >> "$rc_file"
     echo "# Rust System Agent 交互模式" >> "$rc_file"
     echo "$line" >> "$rc_file"
@@ -166,7 +166,7 @@ echo -e "${GREEN}  安装完成${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo "  单次查询:  rsa '你的问题'"
-echo "  交互模式:  rasi  或  rsa interactive"
+echo "  交互模式:  rsai  或  rsa interactive"
 echo ""
 echo "  若刚添加了 alias，请执行: source ~/.bashrc  或  source ~/.zshrc"
 echo ""
