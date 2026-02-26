@@ -141,7 +141,7 @@ fi
 # ---------- 5. 可选：交互模式别名 ----------
 add_alias() {
   local rc_file="$1"
-  local line="alias rasi='rsa interactive'"
+  local line="alias rsai='rsa interactive'"
   if [[ -f "$rc_file" ]] && ! grep -q "alias rasi=" "$rc_file" 2>/dev/null; then
     echo "" >> "$rc_file"
     echo "# Rust System Agent 交互模式" >> "$rc_file"
